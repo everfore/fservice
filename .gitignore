@@ -20,7 +20,8 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+*.exe~
 
 file/*
-
+routers/commentsRouter_github_com_everfore_fservice_controllers.go
 *.tmp
