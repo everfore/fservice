@@ -2,7 +2,7 @@ FROM golang
 
 WORKDIR /gopath/app
 ENV GOPATH /gopath/app
-#ADD . /gopath/app/
+ADD . /gopath/app/
 
 RUN go get github.com/astaxie/beego
 #RUN go get github.com/beego/bee
