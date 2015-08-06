@@ -10,4 +10,4 @@ RUN go get github.com/everfore/fservice
 
 RUN go build -o fservice
 EXPOSE 80
-CMD ["/gopath/app/bin/bee run app"]
+CMD ["/gopath/app/bin/bee","run","app"]
