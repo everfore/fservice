@@ -14,6 +14,8 @@ type FileServerController struct {
 
 func (c *FileServerController) Prepare() {
 	// beego.EnableXSRF = false
+	ip := c.Ctx.Input.IP()
+	beego.Debug(ip)
 }
 
 // @router / [get]
