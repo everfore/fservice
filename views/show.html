@@ -1,0 +1,15 @@
+{{template "header.html" .}}
+<h2></h2>
+<div>
+	<p>
+		<ul>
+			{{range .File}}
+				<li>
+					loadfile:<a href="/loadfile/{{.}}"><h3>{{.}}</h3></a><br>
+					download:<a href="/download/{{.}}"><h3>{{.}}</h3></a><br>
+				</li>
+			{{end}}
+		</ul>
+	</p>
+</div>
+{{template "footer.html" .}}
