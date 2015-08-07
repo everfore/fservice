@@ -20,9 +20,6 @@ func (c *FileServerController) Prepare() {
 	beego.Debug(ip)
 	if !c.CheckLogin() {
 		c.Abort("401")
-		// c.Redirect("/login", 401)
-		// c.Ctx.Redirect(401, "/login")
-		// return
 	}
 }
 
@@ -93,34 +90,22 @@ func (c *FileServerController) Login() {
 
 // @router /login [post]
 func (c *FileServerController) PostLogin() {
-	sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	if err != nil {
-		c.TplNames = "error.html"
-		return
-	}
+	sess, sess_err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 	var usr models.User
-	err = c.ParseForm(&usr)
-	if err != nil {
-		c.TplNames = "error.html"
-		return
+	form_err := c.ParseForm(&usr)
+	if nil != sess_err || nil != form_err {
+		c.Abort("400")
 	}
 	valid := validation.Validation{}
-	// ok, err := valid.Valid(&usr)
-	// if !ok || err != nil || valid.HasErrors() {
-	// 	c.TplNames = "error.html"
-	// 	return
-	// }
-	// beego.Notice(ok, err, valid.HasErrors())
 	usr.Check(&valid)
-	// beego.Notice(ok, err, valid.HasErrors())
 	if valid.HasErrors() {
+		c.Data["content"] = "user no auth."
 		c.TplNames = "error.html"
 		return
 	}
 	sess.Set("gosessionkey", "beego1234")
 	defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	beego.Debug(sess)
-	// c.TplNames = "index.html"
 	c.Redirect("/", 302)
 }
 
@@ -128,13 +113,11 @@ func (c *FileServerController) PostLogin() {
 func (c *FileServerController) Logout() {
 	sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 	if err != nil || sess == nil {
-		c.TplNames = "error.html"
-		return
+		c.Redirect("/error", 401)
 	}
 	sess.Set("gosessionkey", "")
 	defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	beego.Debug(sess)
-	// c.TplNames = "login.html"
 	c.Redirect("/login", 302)
 }
 
@@ -154,4 +137,9 @@ func (c *FileServerController) CheckLogin() bool {
 		return false
 	}
 	return true
+}
+
+// @router /error [get]
+func (c *FileServerController) Error() {
+	c.TplNames = "error.html"
 }

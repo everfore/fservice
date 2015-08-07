@@ -30,12 +30,11 @@ func init() {
 
 func session_init() {
 	// beego.SessionOn = true
-	beego.SessionProvider = "file"
+	// beego.SessionProvider = "file"
 	// beego.SessionName = "begosessionid"
 	// beego.SessionGCMaxLifetime = 3600
 	// beego.SessionCookieLifeTime = 3600
-	beego.SessionSavePath = "./sessionpath"
-	// GlobalSessions, _ = session.NewManager("memory", `{"cookieName":"gosessionid", "enableSetCookie,omitempty": true, "gclifetime":3600, "maxLifetime": 3600, "secure": false, "sessionIDHashFunc": "sha1", "sessionIDHashKey": "", "cookieLifeTime": 3600, "providerConfig": ""}`)
+	// beego.SessionSavePath = "./sessionpath"
 }
 
 func toolbox_init() {

@@ -69,4 +69,11 @@ func init() {
 			[]string{"get"},
 			nil})
 
+	beego.GlobalControllerRouter["github.com/everfore/fservice/controllers:FileServerController"] = append(beego.GlobalControllerRouter["github.com/everfore/fservice/controllers:FileServerController"],
+		beego.ControllerComments{
+			"Error",
+			`/error`,
+			[]string{"get"},
+			nil})
+
 }
