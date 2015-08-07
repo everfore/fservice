@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/validation"
 	"github.com/everfore/fservice/models"
 	"html/template"
 	"io/ioutil"
@@ -16,6 +18,11 @@ func (c *FileServerController) Prepare() {
 	// beego.EnableXSRF = false
 	ip := c.Ctx.Input.IP()
 	beego.Debug(ip)
+	if !c.CheckLogin() {
+		// c.Abort("401")
+		c.Redirect("/login", 401)
+		// c.Ctx.Redirect(401, "/login")
+	}
 }
 
 // @router / [get]
@@ -69,10 +76,80 @@ func (c *FileServerController) LoadFile() {
 	}
 }
 
-// @router /download/*
+// @router /download/* [get]
 func (c *FileServerController) Download() {
 	filename := c.Ctx.Input.Param(":splat")
 	beego.Debug(filename)
 	dstfilename := "./file/" + filename
 	c.Ctx.Output.Download(dstfilename, filename)
+}
+
+// @router /login [get]
+func (c *FileServerController) Login() {
+	c.Data["xsrfdata"] = template.HTML(c.XsrfFormHtml())
+	c.TplNames = "login.html"
+}
+
+// @router /login [post]
+func (c *FileServerController) PostLogin() {
+	sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	if err != nil {
+		c.TplNames = "error.html"
+		return
+	}
+	var usr models.User
+	err = c.ParseForm(&usr)
+	if err != nil {
+		c.TplNames = "error.html"
+		return
+	}
+	valid := validation.Validation{}
+	// ok, err := valid.Valid(&usr)
+	// if !ok || err != nil || valid.HasErrors() {
+	// 	c.TplNames = "error.html"
+	// 	return
+	// }
+	// beego.Notice(ok, err, valid.HasErrors())
+	usr.Check(&valid)
+	// beego.Notice(ok, err, valid.HasErrors())
+	if valid.HasErrors() {
+		c.TplNames = "error.html"
+		return
+	}
+	sess.Set("gosessionkey", "beego1234")
+	defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	beego.Debug(sess)
+	// c.TplNames = "index.html"
+	c.Redirect("/", 302)
+}
+
+// @router /logout [get]
+func (c *FileServerController) Logout() {
+	sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	if err != nil || sess == nil {
+		c.TplNames = "error.html"
+		return
+	}
+	sess.Set("gosessionkey", "")
+	defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	beego.Debug(sess)
+	// c.TplNames = "login.html"
+	c.Redirect("/login", 302)
+}
+
+func (c *FileServerController) CheckLogin() bool {
+	if c.Ctx.Request.RequestURI != "/login" {
+		sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+		if err != nil || sess == nil {
+			return false
+		}
+		sessioner := sess.Get("gosessionkey")
+		beego.Debug("session:", sess)
+		beego.Debug("check login gosessionkey:", sessioner)
+		if fmt.Sprintf("%v", sessioner) == "beego1234" {
+			return true
+		}
+		return false
+	}
+	return true
 }

@@ -1,0 +1,10 @@
+{{template "header.html" .}}
+	<div>
+		<form id="loginform" accept="/login" method="post">
+			{{.xsrfdata}}
+			<h2>User:</h2>	<input type="text" name="username"><br><br>
+			<h2>Password:</h2>	<input type="text" name="password"><br><br>
+			<input type="submit">
+		</form>
+	</div>
+{{template "footer.html" .}}
