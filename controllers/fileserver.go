@@ -103,7 +103,7 @@ func (c *FileServerController) PostLogin() {
 		c.TplNames = "error.html"
 		return
 	}
-	sess.Set("gosessionkey", "beego1234")
+	sess.Set("gosessionid", "beego1234")
 	defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	beego.Debug(sess)
 	c.Redirect("/", 302)
@@ -115,7 +115,7 @@ func (c *FileServerController) Logout() {
 	if err != nil || sess == nil {
 		c.Redirect("/error", 401)
 	}
-	sess.Set("gosessionkey", "")
+	sess.Set("gosessionid", "")
 	defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	beego.Debug(sess)
 	c.Redirect("/login", 302)
@@ -128,9 +128,9 @@ func (c *FileServerController) CheckLogin() bool {
 		if err != nil || sess == nil {
 			return false
 		}
-		sessioner := sess.Get("gosessionkey")
+		sessioner := sess.Get("gosessionid")
 		beego.Debug("session:", sess)
-		beego.Debug("check login gosessionkey:", sessioner)
+		beego.Debug("check login gosessionid:", sessioner)
 		if fmt.Sprintf("%v", sessioner) == "beego1234" {
 			return true
 		}

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	// "github.com/astaxie/beego/session"
 	"github.com/astaxie/beego/context"
+	_ "github.com/astaxie/beego/session/mysql"
 	"github.com/astaxie/beego/toolbox"
 	"github.com/everfore/fservice/models"
 )
