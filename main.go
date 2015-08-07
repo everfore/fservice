@@ -14,6 +14,7 @@ import (
 
 func main() {
 	app := beego.Include(&controllers.FileServerController{})
+	beego.ErrorController(&controllers.ErrorController{})
 	// beego.InsertFilter("/*", beego.BeforeRouter, CheckLogin)
 	app.Run()
 }

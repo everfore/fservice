@@ -19,9 +19,10 @@ func (c *FileServerController) Prepare() {
 	ip := c.Ctx.Input.IP()
 	beego.Debug(ip)
 	if !c.CheckLogin() {
-		// c.Abort("401")
-		c.Redirect("/login", 401)
+		c.Abort("401")
+		// c.Redirect("/login", 401)
 		// c.Ctx.Redirect(401, "/login")
+		// return
 	}
 }
 
@@ -138,7 +139,8 @@ func (c *FileServerController) Logout() {
 }
 
 func (c *FileServerController) CheckLogin() bool {
-	if c.Ctx.Request.RequestURI != "/login" {
+	uri := c.Ctx.Request.RequestURI
+	if uri != "/login" && uri != "/logout" {
 		sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 		if err != nil || sess == nil {
 			return false
