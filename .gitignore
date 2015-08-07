@@ -24,4 +24,4 @@ _testmain.go
 
 file/*
 #routers/commentsRouter_github_com_everfore_fservice_controllers.go
-*.tmp
+#*.tmp
