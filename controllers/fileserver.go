@@ -8,6 +8,9 @@ import (
 	"html/template"
 	"io/ioutil"
 	"os"
+
+	_ "github.com/astaxie/beego/session/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type FileServerController struct {
@@ -126,6 +129,7 @@ func (c *FileServerController) CheckLogin() bool {
 	if uri != "/login" && uri != "/logout" {
 		sess, err := models.GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 		if err != nil || sess == nil {
+			beego.Error(err, sess)
 			return false
 		}
 		sessioner := sess.Get("gosessionid")

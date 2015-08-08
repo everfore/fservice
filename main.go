@@ -8,9 +8,11 @@ import (
 	"fmt"
 	// "github.com/astaxie/beego/session"
 	"github.com/astaxie/beego/context"
-	_ "github.com/astaxie/beego/session/mysql"
 	"github.com/astaxie/beego/toolbox"
 	"github.com/everfore/fservice/models"
+
+	_ "github.com/astaxie/beego/session/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
